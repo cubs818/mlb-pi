@@ -46,6 +46,6 @@ pip install --upgrade -r requirements.txt
 # python script as services
 sudo cp install/mlb.service /etc/systemd/system/mlb.service
 sudo systemctl daemon-reload
-sudo systemctl enable button.service
-sudo systemctl start button.service
+sudo systemctl enable mlb.service
+sudo systemctl start mlb.service
 
