@@ -4,6 +4,6 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/home/smartrack/smartrack-pi/.venv/bin/python /home/smartrack/mlb-pi/mlb_pi/mlb_display.py
+ExecStart=/home/smartrack/mlb-pi/.venv/bin/python /home/smartrack/mlb-pi/mlb_pi/mlb_display.py
 [Install]
 WantedBy=multi-user.target
