@@ -25,19 +25,7 @@ HITS = 108
 RUNS = 84
 
 
-def stats_status(status=True):
-    commands = ["sudo", "systemctl", "start", "stats"]
-    if not status:
-        commands.remove("start")
-        commands.insert(2, "stop")
-    return subprocess.run(
-        commands,
-        check=False,
-    )
-
-
 def display_game(game):
-    stats_status(False)
     i2c = board.I2C()
     oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3C)
     oled.fill(0)

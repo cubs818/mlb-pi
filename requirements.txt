@@ -1,1 +1,6 @@
 MLB-StatsAPI
+adafruit-circuitpython-ssd1306
+psutil
+pillow
+adafruit-python-shell
+RPi.GPIO
