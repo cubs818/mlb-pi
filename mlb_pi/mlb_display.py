@@ -2,8 +2,8 @@ import os
 import pprint
 import subprocess
 import sys
-import time
-from datetime import datetime, timedelta, timezone
+import time as python_time
+from datetime import datetime, timedelta, timezone, time
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -12,20 +12,38 @@ import board
 import psutil as ps
 import statsapi
 from PIL import Image, ImageDraw, ImageFont
+import pytz
+import tzlocal
 
 WIDTH = 128
 HEIGHT = 64
 FONTSIZE = 16
 pp = pprint.PrettyPrinter(indent=4)
-date = datetime.now().strftime("%m/%d/%Y")
 
-games = statsapi.schedule(start_date=date, end_date=date)
+local_tz = ZoneInfo("America/Chicago")
 
 HITS = 108
 RUNS = 84
 
 
+def get_date():
+
+    date_now = datetime.now()
+    date = date_now.replace(tzinfo=timezone.utc)
+    if date.time() > time(15, 00):
+        return date.strftime("%m/%d/%Y")
+    else:
+        date = date - timedelta(1)
+        return date.strftime("%m/%d/%Y")
+
+
+def get_games():
+    game_date = get_date()
+    return statsapi.schedule(start_date=game_date, end_date=game_date)
+
+
 def display_game(game):
+
     i2c = board.I2C()
     oled = adafruit_ssd1306.SSD1306_I2C(WIDTH, HEIGHT, i2c, addr=0x3C)
     oled.fill(0)
@@ -76,11 +94,11 @@ def display_game(game):
 
 
 while 1:
+    games = get_games()
     for game in games:
         game_time = datetime.fromisoformat(game.get("game_datetime")).replace(
             tzinfo=timezone.utc
         )
-        local_tz = ZoneInfo("America/Chicago")
         local_dt = game_time.astimezone(local_tz)
         if game.get("status") == "In Progress":
             status = f"{game.get('inning_state', '')} {game.get('current_inning', '')}"
@@ -105,4 +123,4 @@ while 1:
         }
         # pp.pprint(details)
         display_game(game_details)
-        time.sleep(5)
+        python_time.sleep(5)
